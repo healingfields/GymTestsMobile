@@ -1,19 +1,13 @@
 import { RouteProp } from "@react-navigation/native";
 import { Text, View } from "react-native";
 
-interface HomeProps{
-    route: RouteProp<{params: {token: string}}, 'params'>;
-}
-
-function Home({route}: HomeProps): React.JSX.Element{
-    const {token} = route.params;
+function Home(): React.JSX.Element{
     return (
         <View>
             <Text>
-                {token}
+                Home screen
             </Text>
         </View>
     )
 }
-
 export default Home;
