@@ -2,6 +2,7 @@ import React from "react"
 import { Formik } from "formik"
 import { SafeAreaView, TextInput, Button, View, Text, StyleSheet, Alert} from "react-native"
 import { NavigationProp } from "@react-navigation/native"
+import { saveToken } from "../services/keychainService"
 
 interface LoginInfos{
   userName: string,
@@ -29,6 +30,7 @@ const handleSubmit = async (values: LoginInfos, navigation: NavigationProp<any>)
     }
     const data = await response.json();
     const token = data.jwt;
+    await saveToken(token)
     navigation.navigate('home', {token});
   }catch(error){
     console.log(error);
