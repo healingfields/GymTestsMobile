@@ -1,14 +1,6 @@
-const BASE_URL = "http://localhost:8080";
+import { Category, Question } from "../store/DataContext";
 
-interface Category{
-    id: number,
-    name: string,
-}
-
-interface Question{
-    id: number,
-    content: string
-}
+const BASE_URL = "http://10.0.2.2:8080";
 
 export const getCategories = async(): Promise<Category[]> =>{
  try{
