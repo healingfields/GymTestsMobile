@@ -30,6 +30,7 @@ const handleSubmit = async (values: LoginInfos, navigation: NavigationProp<any>)
     }
     const data = await response.json();
     const token = data.jwt;
+    console.log(token);
     await saveToken(token)
     navigation.navigate('home', {token});
   }catch(error){

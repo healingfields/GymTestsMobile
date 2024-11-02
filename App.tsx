@@ -4,11 +4,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Home from './screens/Home';
 import AuthLoadingScreen from './screens/AuthLoadingScreen';
+import { DataProvider } from './store/DataContext';
 
 const Stack = createNativeStackNavigator();
 
 function App(): React.JSX.Element {
   return (
+    <DataProvider>
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
@@ -28,6 +30,7 @@ function App(): React.JSX.Element {
         />
       </Stack.Navigator>
     </NavigationContainer>
+    </DataProvider>
   )
 }
 
