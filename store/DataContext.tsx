@@ -15,6 +15,7 @@ export interface Question{
 interface DataContextProps {
     categories: Category[];
     currentCategoryIndex: number;
+    setCurrentCategoryIndex: (index: number) => void,
     questions: Question[];
     fetchCategories: () => Promise<void>;
     fetchQuestionsByCategory: (CategoryId: number) => Promise<void>;
@@ -23,6 +24,7 @@ interface DataContextProps {
 export const DataContext = createContext<DataContextProps>({
     categories: [],
     currentCategoryIndex: 1,
+    setCurrentCategoryIndex: () => {},
     questions: [],
     fetchCategories: async () => {},
     fetchQuestionsByCategory: async () => {},
@@ -41,9 +43,6 @@ export const DataProvider = ({children}: DataProviderProps): React.JSX.Element =
             getCategories()
             .then((data) => {
                 setCategories(data);
-                // if(data.length > 0){
-                //     fetchQuestionsByCategory(data[0].id)
-                // }
             })  
         }catch(error){
             console.log('eror setting the data in the state', error);
@@ -54,7 +53,6 @@ export const DataProvider = ({children}: DataProviderProps): React.JSX.Element =
         try{
             getQuestionsByCategory(categoryId)
             .then((data) => setQuestions(data));
-            console.log(questions);
         }catch(error){
             console.log('eror setting questions state', error);
         }
@@ -77,7 +75,7 @@ export const DataProvider = ({children}: DataProviderProps): React.JSX.Element =
     
     
     return(
-        <DataContext.Provider value={{categories, currentCategoryIndex, questions, fetchCategories, fetchQuestionsByCategory}}>
+        <DataContext.Provider value={{categories, currentCategoryIndex, setCurrentCategoryIndex, questions, fetchCategories, fetchQuestionsByCategory}}>
             {children}
         </DataContext.Provider>
     );
