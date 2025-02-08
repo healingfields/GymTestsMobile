@@ -5,7 +5,6 @@ import { getToken } from "../services/keychainService";
 
 function AuthLoadingScreen({navigation}: {navigation: NavigationProp<any>}) : React.JSX.Element{
 
-
     useEffect(() => {
         const checkToken =  async () => {
             const token = await getToken();

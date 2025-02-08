@@ -8,6 +8,8 @@ export const getCategories = async(): Promise<Category[]> =>{
     if(!response.ok)throw new Error("failed to retrives categories");
 
     const data: Category[]=  await response.json();
+    console.log(data + ' directly from the service'); 
+    
     return data;
  }catch(error){
     console.error("error fetching data", error);

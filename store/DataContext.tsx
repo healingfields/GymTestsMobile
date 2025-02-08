@@ -1,5 +1,4 @@
 import React, { createContext, ReactNode, useEffect, useState } from "react";
-import { Text } from "react-native";
 import { getCategories, getQuestionsByCategory } from "../services/apiService";
 
 export interface Category{
@@ -15,13 +14,15 @@ export interface Question{
 
 interface DataContextProps {
     categories: Category[];
+    currentCategoryIndex: number;
     questions: Question[];
     fetchCategories: () => Promise<void>;
-    fetchQuestionsByCategory: (CategoryId: number) => Promise<void>
+    fetchQuestionsByCategory: (CategoryId: number) => Promise<void>;
 }
 
 export const DataContext = createContext<DataContextProps>({
     categories: [],
+    currentCategoryIndex: 1,
     questions: [],
     fetchCategories: async () => {},
     fetchQuestionsByCategory: async () => {},
@@ -32,32 +33,51 @@ interface DataProviderProps{
 }
 export const DataProvider = ({children}: DataProviderProps): React.JSX.Element => {
     const [categories, setCategories] = useState<Category[]>([]);
+    const [currentCategoryIndex, setCurrentCategoryIndex] = useState(1);
     const [questions, setQuestions] = useState<Question[]>([]);
 
     const fetchCategories = async(): Promise<void> =>{
         try{
-            const data = await getCategories();
-            setCategories(data);
+            getCategories()
+            .then((data) => {
+                setCategories(data);
+                // if(data.length > 0){
+                //     fetchQuestionsByCategory(data[0].id)
+                // }
+            })  
         }catch(error){
-            console.log('error setting the data in the state', error);
+            console.log('eror setting the data in the state', error);
         }
     };
 
-    const fetchQuestionsByCategory = async(categoryId: number): Promise<void> =>{
+    const fetchQuestionsByCategory = async(categoryId: number): Promise<void> => {
         try{
-        const data = await getQuestionsByCategory(categoryId);
-        setQuestions(data);
+            getQuestionsByCategory(categoryId)
+            .then((data) => setQuestions(data));
+            console.log(questions);
         }catch(error){
-            console.log('error setting questions state', error);
+            console.log('eror setting questions state', error);
         }
     }
 
-    useEffect(() => {
-      fetchCategories();
-    }, []);
+    // useEffect(() => {
+    //   fetchCategories();
+    // }, []);
+
+    // useEffect(() => {
+    //     if(categories.length > 0){
+    //         fetchQuestionsByCategory(categories[currentCategoryIndex].id)
+    //     }        
+    //   }, [categories, currentCategoryIndex]);
+  
+
+    // useEffect(() => {
+    //   fetchQuestionsByCategory(categories[currentCategoryIndex].id);
+    // }, [categories, currentCategoryIndex])
+    
     
     return(
-        <DataContext.Provider value={{categories, questions, fetchCategories, fetchQuestionsByCategory}}>
+        <DataContext.Provider value={{categories, currentCategoryIndex, questions, fetchCategories, fetchQuestionsByCategory}}>
             {children}
         </DataContext.Provider>
     );
