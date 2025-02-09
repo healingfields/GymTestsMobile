@@ -57,21 +57,6 @@ export const DataProvider = ({children}: DataProviderProps): React.JSX.Element =
             console.log('eror setting questions state', error);
         }
     }
-
-    // useEffect(() => {
-    //   fetchCategories();
-    // }, []);
-
-    // useEffect(() => {
-    //     if(categories.length > 0){
-    //         fetchQuestionsByCategory(categories[currentCategoryIndex].id)
-    //     }        
-    //   }, [categories, currentCategoryIndex]);
-  
-
-    // useEffect(() => {
-    //   fetchQuestionsByCategory(categories[currentCategoryIndex].id);
-    // }, [categories, currentCategoryIndex])
     
     
     return(
