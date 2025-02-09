@@ -12,6 +12,13 @@ export interface Question{
     categoryId: number
 }
 
+export interface Answer {
+    id: number;
+    content: string;
+    userId: number;
+    questionId: number; 
+}
+
 interface DataContextProps {
     categories: Category[];
     currentCategoryIndex: number;

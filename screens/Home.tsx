@@ -1,13 +1,15 @@
 import { NavigationProp, RouteProp } from "@react-navigation/native";
-import { Button, FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Button, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { deleteToken } from "../services/keychainService";
-import { useContext, useEffect } from "react";
-import { Category, DataContext, Question } from "../store/DataContext";
+import { useContext, useEffect, useState } from "react";
+import { Answer, Category, DataContext, Question } from "../store/DataContext";
 
 function Home({ navigation }: { navigation: NavigationProp<any> }): React.JSX.Element {
 
     // Access the context values
     const { categories, currentCategoryIndex, setCurrentCategoryIndex, questions, fetchCategories, fetchQuestionsByCategory } = useContext(DataContext);
+
+    const [answers, setAnswers] = useState<Answer[]>([]);
 
     const handleLogout = async () => {
         await deleteToken();
@@ -25,11 +27,39 @@ function Home({ navigation }: { navigation: NavigationProp<any> }): React.JSX.El
         }
     }, [currentCategoryIndex]);
 
-    const renderQuestionItem = ({ item }: { item: Question }) => (
-        <View style={styles.questionItem}>
-            <Text style={styles.questionText}>{item.content}</Text>
-        </View>
-    );
+    const renderQuestionItem = ({ item }: { item: Question }) => {
+        const answer = answers.find((ans) => ans.questionId === item.id);
+        return (
+            <View style={styles.questionItem}>
+                <Text style={styles.questionText}>{item.content}</Text>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Your answer..."
+                    value={answer ? answer.content : ""}
+                    onChangeText={(text) => handleAnswerChange(item.id, text)}
+                />
+            </View>
+        );
+    };
+
+    // Function to handle text input change
+    const handleAnswerChange = (questionId: number, text: string) => {
+
+        setAnswers((prevAnswers) => {
+            const existingAnswerIndex = prevAnswers.findIndex((ans) => ans.questionId === questionId);
+            if (existingAnswerIndex !== -1) {
+                const updatedAnswers = [...prevAnswers];
+                updatedAnswers[existingAnswerIndex] = {
+                    ...updatedAnswers[existingAnswerIndex],
+                    content: text
+                };
+                return updatedAnswers;
+            } else {
+                return [...prevAnswers, { id: 0, content: text, userId: 1, questionId }]
+            }
+        })
+        console.log(answers);
+    };
 
     const nextCategory = () => {
         if (currentCategoryIndex <= categories.length - 1) {
@@ -150,5 +180,12 @@ const styles = StyleSheet.create({
         color: "#FFF",
         fontSize: 16,
         fontWeight: "bold",
+    },
+    input: {
+        backgroundColor: "#E8E8E8",
+        padding: 10,
+        borderRadius: 8,
+        fontSize: 16,
+        color: "#000",
     },
 });
