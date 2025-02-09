@@ -6,10 +6,7 @@ export const getCategories = async(): Promise<Category[]> =>{
  try{
     const response = await fetch(`${BASE_URL}/categories`);
     if(!response.ok)throw new Error("failed to retrives categories");
-
     const data: Category[]=  await response.json();
-    console.log(data + ' directly from the service'); 
-    
     return data;
  }catch(error){
     console.error("error fetching data", error);
@@ -21,7 +18,6 @@ export const getQuestionsByCategory = async(categoryId: number): Promise<Questio
     try{
         const response = await fetch(`${BASE_URL}/categories/${categoryId}/questions`);
         if(!response.ok)throw new Error("failed to fetch questions");
-        
         const data = await response.json();
         return data;
     }catch(error){

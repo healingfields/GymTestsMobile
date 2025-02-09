@@ -47,34 +47,29 @@ function Home({ navigation }: { navigation: NavigationProp<any> }): React.JSX.El
 
         setAnswers((prevAnswers) => {
             const existingAnswerIndex = prevAnswers.findIndex((ans) => ans.questionId === questionId);
+
+            let updatedAnswers;
             if (existingAnswerIndex !== -1) {
-                const updatedAnswers = [...prevAnswers];
+                updatedAnswers = [...prevAnswers];
                 updatedAnswers[existingAnswerIndex] = {
                     ...updatedAnswers[existingAnswerIndex],
                     content: text
                 };
-                return updatedAnswers;
             } else {
-                return [...prevAnswers, { id: 0, content: text, userId: 1, questionId }]
+                 updatedAnswers = [...prevAnswers, { id: 0, content: text, userId: 1, questionId }]
             }
+            return updatedAnswers.sort((a, b) => a.questionId - b.questionId);
         })
-        console.log(answers);
     };
 
     const nextCategory = () => {
         if (currentCategoryIndex <= categories.length - 1) {
             setCurrentCategoryIndex(currentCategoryIndex + 1);
-            console.log(currentCategoryIndex);
-        } else {
-            console.log("no more categories");
         }
     }
     const previousCategory = () => {
         if (currentCategoryIndex >= 0) {
             setCurrentCategoryIndex(currentCategoryIndex - 1);
-            console.log(currentCategoryIndex);
-        } else {
-            console.log("no more categories");
         }
     }
 
@@ -86,7 +81,7 @@ function Home({ navigation }: { navigation: NavigationProp<any> }): React.JSX.El
 
             {/* Render the list of questions */}
             <FlatList
-                data={questions || []}
+                data={questions.sort((a, b) => a.id - b.id) || []}
                 renderItem={renderQuestionItem}
                 keyExtractor={(question) => String(question.id)}
                 contentContainerStyle={styles.listContainer}
